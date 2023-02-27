@@ -1,29 +1,48 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import Button from '../Button/Button';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from '../../redux/selectors';
+import { addContacts } from '../../redux/contactsSlice';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+import Button from '../Button/Button';
 import styles from './contactForm.module.scss';
 
-const ContactForm = ({ onSubmitForm }) => {
+const ContactForm = () => {
 	const [state, setState] = useState({
 		name: '',
 		number: '',
 	});
 
+	const contacts = useSelector(getContacts);
+	const dispatch = useDispatch();
+
+	// Inputs
 	const onChangeInput = ({ target }) => {
 		setState((prevState) => {
 			return { ...prevState, [target.name]: target.value };
 		});
 	};
 
-	const handleSubmit = (evn) => {
+	// Submit
+	const handleSubmitForm = (evn) => {
 		evn.preventDefault();
-		onSubmitForm(state);
+		const { name: inpName, number: inpNumber } = state;
+
+		// name check
+		if (
+			contacts?.find(({ name }) => name.toLowerCase() === inpName.toLowerCase())
+		) {
+			Notify.warning(`${inpName} is already in contacts.`);
+			return;
+		}
+
+		// add new contact into store
+		dispatch(addContacts(inpName.toLowerCase(), inpNumber));
 		evn.target.reset();
 	};
 
 	return (
-		<form className={styles.form} onSubmit={handleSubmit}>
+		<form className={styles.form} onSubmit={handleSubmitForm}>
 			<label className={styles.label} htmlFor="name">
 				Name
 			</label>
@@ -54,7 +73,5 @@ const ContactForm = ({ onSubmitForm }) => {
 		</form>
 	);
 };
-
-ContactForm.propTypes = { onSubmitForm: PropTypes.func.isRequired };
 
 export default ContactForm;
