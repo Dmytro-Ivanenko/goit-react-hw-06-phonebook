@@ -6,6 +6,7 @@ import { removeContact } from '../../redux/contactsSlice';
 import styles from './contactList.module.scss';
 
 const ContactList = ({ contactsArr }) => {
+	const dispatch = useDispatch();
 	return (
 		<ul>
 			{contactsArr.map(({ id, name, number }) => {
@@ -15,7 +16,7 @@ const ContactList = ({ contactsArr }) => {
 						<p className={styles.number}>{number}</p>
 						<Button
 							type="button"
-							onClickBtn={() => useDispatch(removeContact(id))}
+							onClickBtn={() => dispatch(removeContact(id))}
 						>
 							Delete
 						</Button>

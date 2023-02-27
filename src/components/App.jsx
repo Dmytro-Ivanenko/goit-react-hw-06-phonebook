@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
@@ -9,14 +9,12 @@ import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Notification from './Notification/Notification';
 import { addContacts } from '../redux/contactsSlice';
+import { getContacts, getFilter } from '../redux/selectors';
 
 const App = () => {
-	const contacts = useSelector((state) => state.contacts);
-	console.dir(contacts); // undefined
-	const filterValue = useSelector((state) => state.filterValue);
+	const contacts = useSelector(getContacts);
+	const filter = useSelector(getFilter);
 	const dispatch = useDispatch();
-
-	// ---------------------------------------------------------------------
 
 	// FORM
 	const handleSubmitForm = ({ name, number }) => {
@@ -59,7 +57,7 @@ const App = () => {
 				{contacts?.length > 0 ? (
 					<>
 						<Filter />
-						<ContactList contactsArr={filteredList(filterValue)} />
+						<ContactList contactsArr={filteredList(filter)} />
 					</>
 				) : (
 					<Notification message="There is no contacts"></Notification>

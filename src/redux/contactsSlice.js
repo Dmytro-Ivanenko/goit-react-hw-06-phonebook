@@ -1,17 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import uniqid from 'uniqid';
 
-const initialState = {
-	contacts: [],
-};
-
 const contactsSlice = createSlice({
 	name: 'contacts',
-	initialState,
+	initialState: [],
 	reducers: {
 		addContacts: {
 			reducer(state, action) {
-				state.contacts.push(action.payload);
+				state.push(action.payload);
 			},
 			prepare(name, number) {
 				return {
@@ -23,10 +19,8 @@ const contactsSlice = createSlice({
 				};
 			},
 		},
-		removeContact(state, action) {
-			const { payload: id } = action;
-			state.contacts = state.contacts.filter((contact) => contact.id !== id);
-		},
+		removeContact: (state, { payload }) =>
+			state.filter(({ id }) => id !== payload),
 	},
 });
 
