@@ -7,18 +7,10 @@ import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Notification from './Notification/Notification';
 
-import { getContacts, getFilter } from '../redux/selectors';
+import { getContacts } from '../redux/selectors';
 
 const App = () => {
 	const contacts = useSelector(getContacts);
-	const filter = useSelector(getFilter);
-
-	// FILTER
-	const filteredList = (filterName) => {
-		return contacts?.filter(({ name }) => {
-			return name.toLowerCase().includes(filterName.toLowerCase());
-		});
-	};
 
 	return (
 		<>
@@ -30,7 +22,7 @@ const App = () => {
 				{contacts?.length > 0 ? (
 					<>
 						<Filter />
-						<ContactList contactsArr={filteredList(filter)} />
+						<ContactList />
 					</>
 				) : (
 					<Notification message="There is no contacts"></Notification>
